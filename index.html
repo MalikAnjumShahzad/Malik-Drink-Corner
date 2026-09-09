@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Maal Manager — Bottle Shop</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#1F3B32">
+<link rel="apple-touch-icon" href="icon-192.png">
+<link rel="icon" href="icon-192.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #EAE3D3;
+    --panel: #F6F2E8;
+    --ink: #211C15;
+    --ink-soft: #5B5346;
+    --green: #1F3B32;
+    --green-deep: #16281F;
+    --amber: #C68A3A;
+    --amber-deep: #A66E22;
+    --danger: #A33B2E;
+    --line: #D8CFB9;
+    --radius: 3px;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--ink);
+    font-family:'IBM Plex Sans', sans-serif;
+    font-size:15px;
+    line-height:1.45;
+  }
+  h1,h2,h3, .serif{ font-family:'Fraunces', serif; }
+
+  header.top{
+    background:var(--green);
+    color:#F6F2E8;
+    padding:22px 28px;
+    display:flex;
+    align-items:baseline;
+    justify-content:space-between;
+    flex-wrap:wrap;
+    gap:8px;
+    border-bottom:4px solid var(--amber);
+  }
+  header.top h1{
+    margin:0;
+    font-size:26px;
+    font-weight:600;
+    letter-spacing:0.2px;
+  }
+  header.top .tag{
+    color:#D9CDB4;
+    font-size:13px;
+  }
+
+  .wrap{
+    max-width:1180px;
+    margin:0 auto;
+    padding:24px;
+    display:grid;
+    grid-template-columns: 1.05fr 1.2fr;
+    gap:20px;
+  }
+  @media (max-width: 880px){
+    .wrap{ grid-template-columns: 1fr; }
+  }
+
+  .card{
+    background:var(--panel);
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+  }
+  .card > .card-head{
+    padding:16px 18px 12px;
+    border-bottom:1px solid var(--line);
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+  }
+  .card > .card-head h2{
+    margin:0;
+    font-size:19px;
+    font-weight:600;
+  }
+  .card-body{ padding:16px 18px 20px; }
+
+  label{
+    display:block;
+    font-size:12.5px;
+    color:var(--ink-soft);
+    margin-bottom:4px;
+  }
+  input, select{
+    width:100%;
+    padding:9px 10px;
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    background:#fff;
+    font-family:inherit;
+    font-size:14px;
+    color:var(--ink);
+  }
+  input:focus, select:focus{
+    outline:2px solid var(--amber);
+    outline-offset:1px;
+  }
+
+  .form-grid{
+    display:grid;
+    grid-template-columns: 2fr 1fr 1fr;
+    gap:10px;
+  }
+  .field{ margin-bottom:10px; }
+
+  button{
+    font-family:inherit;
+    font-weight:600;
+    font-size:14px;
+    border:none;
+    border-radius:var(--radius);
+    padding:10px 16px;
+    cursor:pointer;
+  }
+  .btn-primary{ background:var(--green); color:#fff; }
+  .btn-primary:hover{ background:var(--green-deep); }
+  .btn-amber{ background:var(--amber); color:#26190A; }
+  .btn-amber:hover{ background:var(--amber-deep); }
+  .btn-ghost{ background:transparent; color:var(--ink-soft); border:1px solid var(--line); }
+  .btn-ghost:hover{ border-color:var(--ink-soft); }
+  .btn-danger{ background:transparent; color:var(--danger); border:1px solid var(--danger); padding:6px 10px; font-size:12.5px; }
+  .btn-danger:hover{ background:var(--danger); color:#fff; }
+  .btn-sm{ padding:6px 10px; font-size:12.5px; }
+
+  table{ width:100%; border-collapse:collapse; font-size:13.5px; }
+  th{
+    text-align:left;
+    font-size:11.5px;
+    text-transform:uppercase;
+    letter-spacing:0.04em;
+    color:var(--ink-soft);
+    font-weight:600;
+    padding:6px 6px;
+    border-bottom:1px solid var(--line);
+  }
+  td{
+    padding:8px 6px;
+    border-bottom:1px solid var(--line);
+    vertical-align:middle;
+  }
+  tr:last-child td{ border-bottom:none; }
+  .num{ text-align:right; font-variant-numeric: tabular-nums; }
+  .stock-low{ color:var(--danger); font-weight:600; }
+  .muted{ color:var(--ink-soft); font-size:12.5px; }
+
+  .qty-input{ width:56px; padding:5px 6px; }
+
+  .cart-row{ display:flex; align-items:center; gap:8px; }
+  .cart-name{ flex:1; }
+
+  .totals{
+    margin-top:14px;
+    padding-top:12px;
+    border-top:1px solid var(--line);
+  }
+  .totals .line{
+    display:flex;
+    justify-content:space-between;
+    font-size:14px;
+    margin-bottom:6px;
+  }
+  .totals .grand{
+    font-family:'Fraunces', serif;
+    font-size:22px;
+    font-weight:600;
+    color:var(--green);
+  }
+
+  .empty{
+    padding:24px 8px;
+    text-align:center;
+    color:var(--ink-soft);
+    font-size:13.5px;
+  }
+
+  .search-row{ display:flex; gap:8px; margin-bottom:12px; }
+  .search-row input{ flex:1; }
+
+  .history-item{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:8px 0;
+    border-bottom:1px solid var(--line);
+    font-size:13.5px;
+  }
+  .history-item:last-child{ border-bottom:none; }
+  .history-item .hid{ color:var(--ink-soft); font-size:12px; }
+
+  footer.credit{
+    text-align:center;
+    color:var(--ink-soft);
+    font-size:12px;
+    padding:18px;
+  }
+
+  /* Receipt (hidden until print) */
+  #receipt{ display:none; }
+  @media print{
+    body *{ visibility:hidden; }
+    #receipt, #receipt *{ visibility:visible; }
+    #receipt{
+      display:block;
+      position:absolute;
+      top:0; left:0;
+      width:100%;
+      padding:14px;
+      font-family:'IBM Plex Sans', sans-serif;
+    }
+    #receipt h2{ font-family:'Fraunces', serif; margin:0 0 2px; }
+    #receipt table{ width:100%; border-collapse:collapse; margin-top:10px; font-size:13px; }
+    #receipt th, #receipt td{ padding:4px 2px; border-bottom:1px dashed #999; }
+    #receipt .r-total{ margin-top:10px; font-size:16px; font-weight:700; text-align:right; }
+    #receipt .r-meta{ font-size:12px; color:#333; margin:2px 0; }
+    #receipt .r-line{ border-top:1px dashed #999; margin:10px 0; }
+  }
+
+  .toast{
+    position:fixed;
+    bottom:18px;
+    left:50%;
+    transform:translateX(-50%) translateY(12px);
+    background:var(--green-deep);
+    color:#fff;
+    padding:10px 18px;
+    border-radius:var(--radius);
+    font-size:13.5px;
+    opacity:0;
+    pointer-events:none;
+    transition:opacity .2s ease, transform .2s ease;
+    z-index:50;
+  }
+  .toast.show{ opacity:1; transform:translateX(-50%) translateY(0); }
+</style>
+</head>
+<body>
+
+<header class="top">
+  <h1>Maal Manager</h1>
+  <div class="tag">Bottle Shop — Inventory &amp; Billing</div>
+</header>
+
+<div class="wrap">
+
+  <!-- INVENTORY -->
+  <div class="card">
+    <div class="card-head">
+      <h2>Maal (Inventory)</h2>
+      <span class="muted" id="itemCount">0 items</span>
+    </div>
+    <div class="card-body">
+      <div class="form-grid">
+        <div class="field">
+          <label for="itemName">Item name</label>
+          <input id="itemName" type="text" placeholder="e.g. Coca Cola 500ml">
+        </div>
+        <div class="field">
+          <label for="itemPrice">Price (Rs)</label>
+          <input id="itemPrice" type="number" min="0" step="0.01" placeholder="0">
+        </div>
+        <div class="field">
+          <label for="itemStock">Stock</label>
+          <input id="itemStock" type="number" min="0" step="1" placeholder="0">
+        </div>
+      </div>
+      <button class="btn-primary" onclick="addItem()">+ Add / Update Item</button>
+
+      <div class="search-row" style="margin-top:18px;">
+        <input id="invSearch" type="text" placeholder="Search inventory..." oninput="renderInventory()">
+      </div>
+
+      <table>
+        <thead>
+          <tr><th>Item</th><th class="num">Price</th><th class="num">Stock</th><th></th></tr>
+        </thead>
+        <tbody id="invBody"></tbody>
+      </table>
+      <div id="invEmpty" class="empty" style="display:none;">Koi maal add nahi hua abhi. Upar se item add karein.</div>
+    </div>
+  </div>
+
+  <!-- BILLING -->
+  <div class="card">
+    <div class="card-head">
+      <h2>Naya Bill</h2>
+      <span class="muted">Bill #<span id="billNoPreview">1</span></span>
+    </div>
+    <div class="card-body">
+      <div class="field">
+        <label for="customerName">Customer name (optional)</label>
+        <input id="customerName" type="text" placeholder="Walk-in customer">
+      </div>
+
+      <div class="field">
+        <label for="addToCartSelect">Add item to bill</label>
+        <div style="display:flex; gap:8px;">
+          <select id="addToCartSelect"></select>
+          <button class="btn-amber btn-sm" onclick="addToCart()">Add</button>
+        </div>
+      </div>
+
+      <table style="margin-top:6px;">
+        <thead>
+          <tr><th>Item</th><th class="num">Qty</th><th class="num">Rate</th><th class="num">Amount</th><th></th></tr>
+        </thead>
+        <tbody id="cartBody"></tbody>
+      </table>
+      <div id="cartEmpty" class="empty" style="display:none;">Bill khali hai. Item select karke "Add" karein.</div>
+
+      <div class="totals">
+        <div class="line"><span>Total items</span><span id="totalQty">0</span></div>
+        <div class="line grand"><span>Total</span><span id="grandTotal">Rs 0</span></div>
+      </div>
+
+      <div style="display:flex; gap:10px; margin-top:14px;">
+        <button class="btn-primary" onclick="checkout()">Bill Banayein &amp; Print</button>
+        <button class="btn-ghost" onclick="clearCart()">Clear</button>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="wrap" style="grid-template-columns:1fr;">
+  <div class="card">
+    <div class="card-head">
+      <h2>Bill History</h2>
+      <button class="btn-ghost btn-sm" onclick="reprintLast()">Reprint Last Bill</button>
+    </div>
+    <div class="card-body">
+      <div id="historyList"></div>
+      <div id="historyEmpty" class="empty" style="display:none;">Abhi tak koi bill nahi bana.</div>
+    </div>
+  </div>
+</div>
+
+<footer class="credit">Data is saved automatically to your account and stays between visits.</footer>
+
+<div class="toast" id="toast"></div>
+
+<!-- PRINTABLE RECEIPT -->
+<div id="receipt">
+  <h2>Maal Manager</h2>
+  <div class="r-meta" id="rCustomer"></div>
+  <div class="r-meta" id="rBillNo"></div>
+  <div class="r-meta" id="rDate"></div>
+  <table>
+    <thead><tr><th style="text-align:left;">Item</th><th style="text-align:right;">Qty</th><th style="text-align:right;">Rate</th><th style="text-align:right;">Amt</th></tr></thead>
+    <tbody id="rBody"></tbody>
+  </table>
+  <div class="r-line"></div>
+  <div class="r-total" id="rTotal"></div>
+</div>
+
+<script>
+let DATA = { inventory: [], bills: [], nextBillNo: 1 };
+let cart = []; // {id, name, price, qty}
+const STORAGE_KEY = 'bottle-shop-data';
+
+function loadData(){
+  try{
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if(raw){
+      DATA = JSON.parse(raw);
+      if(!DATA.inventory) DATA.inventory = [];
+      if(!DATA.bills) DATA.bills = [];
+      if(!DATA.nextBillNo) DATA.nextBillNo = 1;
+    }
+  }catch(e){
+    // no existing data yet, or storage blocked
+  }
+  renderInventory();
+  renderCartSelect();
+  renderCart();
+  renderHistory();
+}
+
+function saveData(){
+  try{
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(DATA));
+  }catch(e){
+    showToast('Save failed on this device');
+  }
+}
+
+function showToast(msg){
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(()=> t.classList.remove('show'), 1800);
+}
+
+function uid(){ return Date.now().toString(36) + Math.random().toString(36).slice(2,6); }
+
+function addItem(){
+  const nameEl = document.getElementById('itemName');
+  const priceEl = document.getElementById('itemPrice');
+  const stockEl = document.getElementById('itemStock');
+  const name = nameEl.value.trim();
+  const price = parseFloat(priceEl.value);
+  const stock = parseInt(stockEl.value, 10);
+
+  if(!name){ showToast('Item ka naam likhein'); return; }
+  if(isNaN(price) || price < 0){ showToast('Sahi price likhein'); return; }
+  if(isNaN(stock) || stock < 0){ showToast('Sahi stock likhein'); return; }
+
+  const existing = DATA.inventory.find(i => i.name.toLowerCase() === name.toLowerCase());
+  if(existing){
+    existing.price = price;
+    existing.stock += stock;
+    showToast('Item update ho gaya: ' + name);
+  } else {
+    DATA.inventory.push({ id: uid(), name, price, stock });
+    showToast('Item add ho gaya: ' + name);
+  }
+
+  nameEl.value = ''; priceEl.value = ''; stockEl.value = '';
+  saveData();
+  renderInventory();
+  renderCartSelect();
+}
+
+function deleteItem(id){
+  DATA.inventory = DATA.inventory.filter(i => i.id !== id);
+  saveData();
+  renderInventory();
+  renderCartSelect();
+}
+
+function editStock(id, delta){
+  const item = DATA.inventory.find(i => i.id === id);
+  if(!item) return;
+  item.stock = Math.max(0, item.stock + delta);
+  saveData();
+  renderInventory();
+}
+
+function renderInventory(){
+  const body = document.getElementById('invBody');
+  const empty = document.getElementById('invEmpty');
+  const q = document.getElementById('invSearch').value.trim().toLowerCase();
+  const list = DATA.inventory.filter(i => i.name.toLowerCase().includes(q))
+                              .sort((a,b)=> a.name.localeCompare(b.name));
+
+  document.getElementById('itemCount').textContent = DATA.inventory.length + ' items';
+
+  if(list.length === 0){
+    body.innerHTML = '';
+    empty.style.display = 'block';
+    return;
+  }
+  empty.style.display = 'none';
+
+  body.innerHTML = list.map(i => `
+    <tr>
+      <td>${escapeHtml(i.name)}</td>
+      <td class="num">Rs ${i.price.toFixed(2)}</td>
+      <td class="num ${i.stock <= 5 ? 'stock-low' : ''}">${i.stock}</td>
+      <td class="num">
+        <button class="btn-ghost btn-sm" onclick="editStock('${i.id}', 1)">+1</button>
+        <button class="btn-ghost btn-sm" onclick="editStock('${i.id}', -1)">-1</button>
+        <button class="btn-danger" onclick="deleteItem('${i.id}')">Del</button>
+      </td>
+    </tr>
+  `).join('');
+}
+
+function renderCartSelect(){
+  const sel = document.getElementById('addToCartSelect');
+  const sorted = [...DATA.inventory].sort((a,b)=> a.name.localeCompare(b.name));
+  sel.innerHTML = sorted.length
+    ? sorted.map(i => `<option value="${i.id}">${escapeHtml(i.name)} — Rs ${i.price.toFixed(2)} (stock: ${i.stock})</option>`).join('')
+    : `<option value="">No items in inventory yet</option>`;
+}
+
+function addToCart(){
+  const sel = document.getElementById('addToCartSelect');
+  const id = sel.value;
+  if(!id){ showToast('Pehle inventory mein item add karein'); return; }
+  const item = DATA.inventory.find(i => i.id === id);
+  if(!item) return;
+
+  if(item.stock <= 0){ showToast(item.name + ' stock mein nahi hai'); return; }
+
+  const existing = cart.find(c => c.id === id);
+  if(existing){
+    if(existing.qty + 1 > item.stock){ showToast('Stock kam hai'); return; }
+    existing.qty += 1;
+  } else {
+    cart.push({ id: item.id, name: item.name, price: item.price, qty: 1 });
+  }
+  renderCart();
+}
+
+function changeCartQty(id, delta){
+  const row = cart.find(c => c.id === id);
+  const item = DATA.inventory.find(i => i.id === id);
+  if(!row) return;
+  const newQty = row.qty + delta;
+  if(newQty <= 0){
+    cart = cart.filter(c => c.id !== id);
+  } else if(item && newQty > item.stock){
+    showToast('Stock kam hai');
+    return;
+  } else {
+    row.qty = newQty;
+  }
+  renderCart();
+}
+
+function removeFromCart(id){
+  cart = cart.filter(c => c.id !== id);
+  renderCart();
+}
+
+function clearCart(){
+  cart = [];
+  document.getElementById('customerName').value = '';
+  renderCart();
+}
+
+function renderCart(){
+  const body = document.getElementById('cartBody');
+  const empty = document.getElementById('cartEmpty');
+
+  if(cart.length === 0){
+    body.innerHTML = '';
+    empty.style.display = 'block';
+  } else {
+    empty.style.display = 'none';
+    body.innerHTML = cart.map(c => `
+      <tr>
+        <td>${escapeHtml(c.name)}</td>
+        <td class="num">
+          <div style="display:flex; align-items:center; justify-content:flex-end; gap:4px;">
+            <button class="btn-ghost btn-sm" onclick="changeCartQty('${c.id}', -1)">-</button>
+            <span>${c.qty}</span>
+            <button class="btn-ghost btn-sm" onclick="changeCartQty('${c.id}', 1)">+</button>
+          </div>
+        </td>
+        <td class="num">Rs ${c.price.toFixed(2)}</td>
+        <td class="num">Rs ${(c.price * c.qty).toFixed(2)}</td>
+        <td class="num"><button class="btn-danger" onclick="removeFromCart('${c.id}')">✕</button></td>
+      </tr>
+    `).join('');
+  }
+
+  const totalQty = cart.reduce((s,c)=> s + c.qty, 0);
+  const grandTotal = cart.reduce((s,c)=> s + c.qty * c.price, 0);
+  document.getElementById('totalQty').textContent = totalQty;
+  document.getElementById('grandTotal').textContent = 'Rs ' + grandTotal.toFixed(2);
+  document.getElementById('billNoPreview').textContent = DATA.nextBillNo;
+}
+
+async function checkout(){
+  if(cart.length === 0){ showToast('Bill mein koi item nahi hai'); return; }
+
+  // deduct stock
+  for(const c of cart){
+    const item = DATA.inventory.find(i => i.id === c.id);
+    if(item) item.stock = Math.max(0, item.stock - c.qty);
+  }
+
+  const customer = document.getElementById('customerName').value.trim() || 'Walk-in customer';
+  const total = cart.reduce((s,c)=> s + c.qty * c.price, 0);
+  const bill = {
+    id: DATA.nextBillNo,
+    date: new Date().toISOString(),
+    customer,
+    items: cart.map(c => ({ name: c.name, qty: c.qty, price: c.price })),
+    total
+  };
+  DATA.bills.unshift(bill);
+  DATA.nextBillNo += 1;
+
+  await saveData();
+  renderInventory();
+  renderCartSelect();
+  renderHistory();
+  printBill(bill);
+  clearCart();
+  showToast('Bill #' + bill.id + ' ban gaya');
+}
+
+function renderHistory(){
+  const list = document.getElementById('historyList');
+  const empty = document.getElementById('historyEmpty');
+  const bills = DATA.bills.slice(0, 30);
+
+  if(bills.length === 0){
+    list.innerHTML = '';
+    empty.style.display = 'block';
+    return;
+  }
+  empty.style.display = 'none';
+
+  list.innerHTML = bills.map(b => `
+    <div class="history-item">
+      <div>
+        <div>Bill #${b.id} — ${escapeHtml(b.customer)}</div>
+        <div class="hid">${new Date(b.date).toLocaleString()} · ${b.items.length} item(s)</div>
+      </div>
+      <div style="display:flex; align-items:center; gap:10px;">
+        <strong>Rs ${b.total.toFixed(2)}</strong>
+        <button class="btn-ghost btn-sm" onclick="reprintBillById(${b.id})">Print</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+function reprintLast(){
+  if(DATA.bills.length === 0){ showToast('Koi bill history mein nahi'); return; }
+  printBill(DATA.bills[0]);
+}
+
+function reprintBillById(id){
+  const b = DATA.bills.find(x => x.id === id);
+  if(b) printBill(b);
+}
+
+function printBill(bill){
+  document.getElementById('rCustomer').textContent = 'Customer: ' + bill.customer;
+  document.getElementById('rBillNo').textContent = 'Bill #' + bill.id;
+  document.getElementById('rDate').textContent = new Date(bill.date).toLocaleString();
+  document.getElementById('rBody').innerHTML = bill.items.map(it => `
+    <tr>
+      <td>${escapeHtml(it.name)}</td>
+      <td style="text-align:right;">${it.qty}</td>
+      <td style="text-align:right;">${it.price.toFixed(2)}</td>
+      <td style="text-align:right;">${(it.qty * it.price).toFixed(2)}</td>
+    </tr>
+  `).join('');
+  document.getElementById('rTotal').textContent = 'Total: Rs ' + bill.total.toFixed(2);
+  setTimeout(()=> window.print(), 80);
+}
+
+function escapeHtml(s){
+  const d = document.createElement('div');
+  d.textContent = s;
+  return d.innerHTML;
+}
+
+loadData();
+
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('sw.js').catch(()=>{});
+  });
+}
+</script>
+</body>
+</html>
