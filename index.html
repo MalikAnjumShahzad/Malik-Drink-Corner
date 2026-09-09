@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Maal Manager — Bottle Shop</title>
+<title>Malik Drink Corner — Bottle Shop</title>
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#1F3B32">
 <link rel="apple-touch-icon" href="icon-192.png">
@@ -55,6 +55,7 @@
   header.top .tag{
     color:#D9CDB4;
     font-size:13px;
+    text-align: right;
   }
 
   .wrap{
@@ -226,6 +227,7 @@
     #receipt .r-total{ margin-top:10px; font-size:16px; font-weight:700; text-align:right; }
     #receipt .r-meta{ font-size:12px; color:#333; margin:2px 0; }
     #receipt .r-line{ border-top:1px dashed #999; margin:10px 0; }
+    #receipt .r-footer{ margin-top:15px; text-align:center; font-size:11px; border-top:1px dashed #999; padding-top:6px; }
   }
 
   .toast{
@@ -249,8 +251,8 @@
 <body>
 
 <header class="top">
-  <h1>Maal Manager</h1>
-  <div class="tag">Bottle Shop — Inventory &amp; Billing</div>
+  <h1>Malik Drink Corner</h1>
+  <div class="tag">Software Developer: Malik Anjum Shahzad<br>03063163446</div>
 </header>
 
 <div class="wrap">
@@ -353,7 +355,7 @@
 
 <!-- PRINTABLE RECEIPT -->
 <div id="receipt">
-  <h2>Maal Manager</h2>
+  <h2>Malik Drink Corner</h2>
   <div class="r-meta" id="rCustomer"></div>
   <div class="r-meta" id="rBillNo"></div>
   <div class="r-meta" id="rDate"></div>
@@ -363,11 +365,15 @@
   </table>
   <div class="r-line"></div>
   <div class="r-total" id="rTotal"></div>
+  <div class="r-footer">
+    Software Developer: Malik Anjum Shahzad<br>
+    Contact: 03063163446
+  </div>
 </div>
 
 <script>
 let DATA = { inventory: [], bills: [], nextBillNo: 1 };
-let cart = []; // {id, name, price, qty}
+let cart = []; 
 const STORAGE_KEY = 'bottle-shop-data';
 
 function loadData(){
@@ -379,9 +385,7 @@ function loadData(){
       if(!DATA.bills) DATA.bills = [];
       if(!DATA.nextBillNo) DATA.nextBillNo = 1;
     }
-  }catch(e){
-    // no existing data yet, or storage blocked
-  }
+  }catch(e){}
   renderInventory();
   renderCartSelect();
   renderCart();
@@ -568,7 +572,6 @@ function renderCart(){
 async function checkout(){
   if(cart.length === 0){ showToast('Bill mein koi item nahi hai'); return; }
 
-  // deduct stock
   for(const c of cart){
     const item = DATA.inventory.find(i => i.id === c.id);
     if(item) item.stock = Math.max(0, item.stock - c.qty);
