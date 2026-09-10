@@ -3,13 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Malik Drink Corner — Bottle Shop</title>
+<title>Malik Drink Corner — POS</title>
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#1F3B32">
-<link rel="apple-touch-icon" href="icon-192.png">
-<link rel="icon" href="icon-192.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=IBM+Plex+Sans:wght@400;600&display=swap" rel="stylesheet">
 <style>
   :root{
     --bg: #EAE3D3;
@@ -19,7 +17,6 @@
     --green: #1F3B32;
     --green-deep: #16281F;
     --amber: #C68A3A;
-    --amber-deep: #A66E22;
     --danger: #A33B2E;
     --line: #D8CFB9;
     --radius: 3px;
@@ -33,7 +30,7 @@
     font-size:15px;
     line-height:1.45;
   }
-  h1,h2,h3, .serif{ font-family:'Fraunces', serif; }
+  h1,h2,h3{ font-family:'IBM Plex Sans', sans-serif; }
 
   header.top{
     background:var(--green);
@@ -46,17 +43,8 @@
     gap:8px;
     border-bottom:4px solid var(--amber);
   }
-  header.top h1{
-    margin:0;
-    font-size:26px;
-    font-weight:600;
-    letter-spacing:0.2px;
-  }
-  header.top .tag{
-    color:#D9CDB4;
-    font-size:13px;
-    text-align: right;
-  }
+  header.top h1{ margin:0; font-size:26px; font-weight:600; }
+  header.top .tag{ color:#D9CDB4; font-size:13px; text-align:right; line-height: 1.4; }
 
   .wrap{
     max-width:1180px;
@@ -66,9 +54,7 @@
     grid-template-columns: 1.05fr 1.2fr;
     gap:20px;
   }
-  @media (max-width: 880px){
-    .wrap{ grid-template-columns: 1fr; }
-  }
+  @media (max-width: 880px){ .wrap{ grid-template-columns: 1fr; } }
 
   .card{
     background:var(--panel);
@@ -82,19 +68,10 @@
     align-items:center;
     justify-content:space-between;
   }
-  .card > .card-head h2{
-    margin:0;
-    font-size:19px;
-    font-weight:600;
-  }
+  .card > .card-head h2{ margin:0; font-size:19px; font-weight:600; }
   .card-body{ padding:16px 18px 20px; }
 
-  label{
-    display:block;
-    font-size:12.5px;
-    color:var(--ink-soft);
-    margin-bottom:4px;
-  }
+  label{ display:block; font-size:12.5px; color:var(--ink-soft); margin-bottom:4px; }
   input, select{
     width:100%;
     padding:9px 10px;
@@ -105,16 +82,9 @@
     font-size:14px;
     color:var(--ink);
   }
-  input:focus, select:focus{
-    outline:2px solid var(--amber);
-    outline-offset:1px;
-  }
+  input:focus, select:focus{ outline:2px solid var(--amber); outline-offset:1px; }
 
-  .form-grid{
-    display:grid;
-    grid-template-columns: 2fr 1fr 1fr;
-    gap:10px;
-  }
+  .form-grid{ display:grid; grid-template-columns: 2fr 1fr 1fr; gap:10px; }
   .field{ margin-bottom:10px; }
 
   button{
@@ -129,11 +99,8 @@
   .btn-primary{ background:var(--green); color:#fff; }
   .btn-primary:hover{ background:var(--green-deep); }
   .btn-amber{ background:var(--amber); color:#26190A; }
-  .btn-amber:hover{ background:var(--amber-deep); }
   .btn-ghost{ background:transparent; color:var(--ink-soft); border:1px solid var(--line); }
-  .btn-ghost:hover{ border-color:var(--ink-soft); }
   .btn-danger{ background:transparent; color:var(--danger); border:1px solid var(--danger); padding:6px 10px; font-size:12.5px; }
-  .btn-danger:hover{ background:var(--danger); color:#fff; }
   .btn-sm{ padding:6px 10px; font-size:12.5px; }
 
   table{ width:100%; border-collapse:collapse; font-size:13.5px; }
@@ -147,68 +114,30 @@
     padding:6px 6px;
     border-bottom:1px solid var(--line);
   }
-  td{
-    padding:8px 6px;
-    border-bottom:1px solid var(--line);
-    vertical-align:middle;
-  }
+  td{ padding:8px 6px; border-bottom:1px solid var(--line); vertical-align:middle; }
   tr:last-child td{ border-bottom:none; }
   .num{ text-align:right; font-variant-numeric: tabular-nums; }
   .stock-low{ color:var(--danger); font-weight:600; }
   .muted{ color:var(--ink-soft); font-size:12.5px; }
 
-  .qty-input{ width:56px; padding:5px 6px; }
+  .totals{ margin-top:14px; padding-top:12px; border-top:1px solid var(--line); }
+  .totals .line{ display:flex; justify-content:space-between; font-size:14px; margin-bottom:6px; }
+  .totals .grand{ font-size:20px; font-weight:600; color:var(--green); }
 
-  .cart-row{ display:flex; align-items:center; gap:8px; }
-  .cart-name{ flex:1; }
-
-  .totals{
-    margin-top:14px;
-    padding-top:12px;
-    border-top:1px solid var(--line);
-  }
-  .totals .line{
-    display:flex;
-    justify-content:space-between;
-    font-size:14px;
-    margin-bottom:6px;
-  }
-  .totals .grand{
-    font-family:'Fraunces', serif;
-    font-size:22px;
-    font-weight:600;
-    color:var(--green);
-  }
-
-  .empty{
-    padding:24px 8px;
-    text-align:center;
-    color:var(--ink-soft);
-    font-size:13.5px;
-  }
-
+  .empty{ padding:24px 8px; text-align:center; color:var(--ink-soft); font-size:13.5px; }
   .search-row{ display:flex; gap:8px; margin-bottom:12px; }
   .search-row input{ flex:1; }
 
   .history-item{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    padding:8px 0;
-    border-bottom:1px solid var(--line);
-    font-size:13.5px;
+    display:flex; justify-content:space-between; align-items:center;
+    padding:8px 0; border-bottom:1px solid var(--line); font-size:13.5px;
   }
   .history-item:last-child{ border-bottom:none; }
   .history-item .hid{ color:var(--ink-soft); font-size:12px; }
 
-  footer.credit{
-    text-align:center;
-    color:var(--ink-soft);
-    font-size:12px;
-    padding:18px;
-  }
+  footer.credit{ text-align:center; color:var(--ink-soft); font-size:12px; padding:18px; }
 
-  /* Receipt (hidden until print) */
+  /* --- THERMAL RECEIPT STYLING --- */
   #receipt{ display:none; }
   @media print{
     body *{ visibility:hidden; }
@@ -217,46 +146,52 @@
       display:block;
       position:absolute;
       top:0; left:0;
-      width:100%;
-      padding:14px;
-      font-family:'IBM Plex Sans', sans-serif;
+      width: 80mm;
+      padding: 5mm;
+      font-family: 'Share Tech Mono', monospace;
+      color: #000;
+      background: #fff;
+      font-size: 13px;
     }
-    #receipt h2{ font-family:'Fraunces', serif; margin:0 0 2px; }
-    #receipt table{ width:100%; border-collapse:collapse; margin-top:10px; font-size:13px; }
-    #receipt th, #receipt td{ padding:4px 2px; border-bottom:1px dashed #999; }
-    #receipt .r-total{ margin-top:10px; font-size:16px; font-weight:700; text-align:right; }
-    #receipt .r-meta{ font-size:12px; color:#333; margin:2px 0; }
-    #receipt .r-line{ border-top:1px dashed #999; margin:10px 0; }
-    #receipt .r-footer{ margin-top:15px; text-align:center; font-size:11px; border-top:1px dashed #999; padding-top:6px; }
+    .r-center{ text-align:center; }
+    .r-shop{ font-size: 18px; font-weight: bold; text-transform: uppercase; margin-bottom: 2px; }
+    .r-sub{ font-size: 11px; margin-bottom: 8px; }
+    .r-divider{ border-top: 1px dashed #000; margin: 8px 0; }
+    .r-row{ display: flex; justify-content: space-between; font-size: 12px; margin: 3px 0; }
+    .r-table{ width: 100%; border-collapse: collapse; margin: 6px 0; font-size: 12px; }
+    .r-table th{ border-bottom: 1px dashed #000; padding-bottom: 3px; text-align: left; font-size: 11px; }
+    .r-table td{ padding: 3px 0; border-bottom: none; }
+    .r-barcode{
+      text-align: center;
+      font-family: 'Libre Barcode 39', cursive, monospace;
+      font-size: 36px;
+      letter-spacing: 2px;
+      margin-top: 8px;
+    }
+    .r-footer{ text-align: center; font-size: 11px; margin-top: 10px; line-height: 1.4; }
   }
 
   .toast{
-    position:fixed;
-    bottom:18px;
-    left:50%;
-    transform:translateX(-50%) translateY(12px);
-    background:var(--green-deep);
-    color:#fff;
-    padding:10px 18px;
-    border-radius:var(--radius);
-    font-size:13.5px;
-    opacity:0;
-    pointer-events:none;
-    transition:opacity .2s ease, transform .2s ease;
-    z-index:50;
+    position:fixed; bottom:18px; left:50%; transform:translateX(-50%) translateY(12px);
+    background:var(--green-deep); color:#fff; padding:10px 18px; border-radius:var(--radius);
+    font-size:13.5px; opacity:0; pointer-events:none; transition:opacity .2s ease, transform .2s ease; z-index:50;
   }
   .toast.show{ opacity:1; transform:translateX(-50%) translateY(0); }
 </style>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Barcode+39&display=swap" rel="stylesheet">
 </head>
 <body>
 
 <header class="top">
   <h1>Malik Drink Corner</h1>
-  <div class="tag">Software Developer: Malik Anjum Shahzad<br>03063163446</div>
+  <div class="tag">
+    Software Developer<br>
+    Malik Anjum Shahzad<br>
+    03063163446
+  </div>
 </header>
 
 <div class="wrap">
-
   <!-- INVENTORY -->
   <div class="card">
     <div class="card-head">
@@ -290,7 +225,7 @@
         </thead>
         <tbody id="invBody"></tbody>
       </table>
-      <div id="invEmpty" class="empty" style="display:none;">Koi maal add nahi hua abhi. Upar se item add karein.</div>
+      <div id="invEmpty" class="empty" style="display:none;">Koi maal add nahi hua abhi.</div>
     </div>
   </div>
 
@@ -320,11 +255,11 @@
         </thead>
         <tbody id="cartBody"></tbody>
       </table>
-      <div id="cartEmpty" class="empty" style="display:none;">Bill khali hai. Item select karke "Add" karein.</div>
+      <div id="cartEmpty" class="empty" style="display:none;">Bill khali hai.</div>
 
       <div class="totals">
         <div class="line"><span>Total items</span><span id="totalQty">0</span></div>
-        <div class="line grand"><span>Total</span><span id="grandTotal">Rs 0</span></div>
+        <div class="line grand"><span>Total Amount</span><span id="grandTotal">Rs 0</span></div>
       </div>
 
       <div style="display:flex; gap:10px; margin-top:14px;">
@@ -333,7 +268,6 @@
       </div>
     </div>
   </div>
-
 </div>
 
 <div class="wrap" style="grid-template-columns:1fr;">
@@ -349,32 +283,56 @@
   </div>
 </div>
 
-<footer class="credit">Data is saved automatically to your account and stays between visits.</footer>
-
+<footer class="credit">Data is saved automatically on your device.</footer>
 <div class="toast" id="toast"></div>
 
-<!-- PRINTABLE RECEIPT -->
+<!-- THERMAL RECEIPT TEMPLATE -->
 <div id="receipt">
-  <h2>Malik Drink Corner</h2>
-  <div class="r-meta" id="rCustomer"></div>
-  <div class="r-meta" id="rBillNo"></div>
-  <div class="r-meta" id="rDate"></div>
-  <table>
-    <thead><tr><th style="text-align:left;">Item</th><th style="text-align:right;">Qty</th><th style="text-align:right;">Rate</th><th style="text-align:right;">Amt</th></tr></thead>
+  <div class="r-center r-shop">Malik Drink Corner</div>
+  <div class="r-center r-sub">Malik Jamshed<br>03077181568</div>
+  <div class="r-divider"></div>
+  <div class="r-center" style="font-weight:bold; margin-bottom:4px;">CASH RECEIPT</div>
+  <div class="r-row"><span id="rBillNo">Bill #1</span><span id="rDate"></span></div>
+  <div class="r-row"><span id="rCustomer">Customer: Walk-in</span><span></span></div>
+  <div class="r-divider"></div>
+  <table class="r-table">
+    <thead>
+      <tr>
+        <th>Description</th>
+        <th style="text-align:right;">Qty</th>
+        <th style="text-align:right;">Price</th>
+      </tr>
+    </thead>
     <tbody id="rBody"></tbody>
   </table>
-  <div class="r-line"></div>
-  <div class="r-total" id="rTotal"></div>
+  <div class="r-divider"></div>
+  <div class="r-row" style="font-weight:bold; font-size:14px;">
+    <span>Total</span>
+    <span id="rTotal">16.5</span>
+  </div>
+  <div class="r-row">
+    <span>Cash Received</span>
+    <span id="rCash">--</span>
+  </div>
+  <div class="r-row">
+    <span>Change</span>
+    <span id="rChange">0.00</span>
+  </div>
+  <div class="r-divider"></div>
+  <div class="r-center" style="margin: 6px 0; font-size: 12px;">THANK YOU!</div>
+  <div class="r-barcode">*MALIK-POS*</div>
+  <div class="r-divider"></div>
   <div class="r-footer">
-    Software Developer: Malik Anjum Shahzad<br>
-    Contact: 03063163446
+    Software Developer<br>
+    Malik Anjum Shahzad<br>
+    03063163446
   </div>
 </div>
 
 <script>
 let DATA = { inventory: [], bills: [], nextBillNo: 1 };
 let cart = []; 
-const STORAGE_KEY = 'bottle-shop-data';
+const STORAGE_KEY = 'malik-drink-corner-data';
 
 function loadData(){
   try{
@@ -393,11 +351,7 @@ function loadData(){
 }
 
 function saveData(){
-  try{
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(DATA));
-  }catch(e){
-    showToast('Save failed on this device');
-  }
+  try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(DATA)); }catch(e){}
 }
 
 function showToast(msg){
@@ -425,10 +379,10 @@ function addItem(){
   if(existing){
     existing.price = price;
     existing.stock += stock;
-    showToast('Item update ho gaya: ' + name);
+    showToast('Item update ho gaya');
   } else {
     DATA.inventory.push({ id: uid(), name, price, stock });
-    showToast('Item add ho gaya: ' + name);
+    showToast('Item add ho gaya');
   }
 
   nameEl.value = ''; priceEl.value = ''; stockEl.value = '';
@@ -487,7 +441,7 @@ function renderCartSelect(){
   const sorted = [...DATA.inventory].sort((a,b)=> a.name.localeCompare(b.name));
   sel.innerHTML = sorted.length
     ? sorted.map(i => `<option value="${i.id}">${escapeHtml(i.name)} — Rs ${i.price.toFixed(2)} (stock: ${i.stock})</option>`).join('')
-    : `<option value="">No items in inventory yet</option>`;
+    : `<option value="">No items in inventory</option>`;
 }
 
 function addToCart(){
@@ -496,7 +450,6 @@ function addToCart(){
   if(!id){ showToast('Pehle inventory mein item add karein'); return; }
   const item = DATA.inventory.find(i => i.id === id);
   if(!item) return;
-
   if(item.stock <= 0){ showToast(item.name + ' stock mein nahi hai'); return; }
 
   const existing = cart.find(c => c.id === id);
@@ -589,7 +542,7 @@ async function checkout(){
   DATA.bills.unshift(bill);
   DATA.nextBillNo += 1;
 
-  await saveData();
+  saveData();
   renderInventory();
   renderCartSelect();
   renderHistory();
@@ -637,16 +590,20 @@ function reprintBillById(id){
 function printBill(bill){
   document.getElementById('rCustomer').textContent = 'Customer: ' + bill.customer;
   document.getElementById('rBillNo').textContent = 'Bill #' + bill.id;
-  document.getElementById('rDate').textContent = new Date(bill.date).toLocaleString();
+  document.getElementById('rDate').textContent = new Date(bill.date).toLocaleDateString();
+  
   document.getElementById('rBody').innerHTML = bill.items.map(it => `
     <tr>
       <td>${escapeHtml(it.name)}</td>
       <td style="text-align:right;">${it.qty}</td>
-      <td style="text-align:right;">${it.price.toFixed(2)}</td>
       <td style="text-align:right;">${(it.qty * it.price).toFixed(2)}</td>
     </tr>
   `).join('');
-  document.getElementById('rTotal').textContent = 'Total: Rs ' + bill.total.toFixed(2);
+  
+  document.getElementById('rTotal').textContent = 'Rs ' + bill.total.toFixed(2);
+  document.getElementById('rCash').textContent = 'Rs ' + bill.total.toFixed(2);
+  document.getElementById('rChange').textContent = 'Rs 0.00';
+  
   setTimeout(()=> window.print(), 80);
 }
 
@@ -657,12 +614,6 @@ function escapeHtml(s){
 }
 
 loadData();
-
-if ('serviceWorker' in navigator) {
-  window.addEventListener('load', () => {
-    navigator.serviceWorker.register('sw.js').catch(()=>{});
-  });
-}
 </script>
 </body>
 </html>
